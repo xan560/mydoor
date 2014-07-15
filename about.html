@@ -1,0 +1,76 @@
+<?php 
+session_start(); 
+?>
+
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="images/logo_pi.png">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>myDoor</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="css/default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div id="logo-wrap">
+<div id="logo">
+	<img src="images/logo_pi.png" alt="" width="70" height="80" class="left" />
+	<h1><a href="index.html">myDoor</a></h1>
+	<h2> full control of your door</h2>
+</div>
+</div>
+
+<!-- start header -->
+<div id="header">
+	<div id="menu">
+		<ul>
+			<li><a href="index.html">Homepage</a></li>
+			<li><a href="control/">Control</a></li>
+			<li class="current_page_item"><a href="about.html">About</a></li>
+			<li><a href="contact.html">Want One?</a></li>
+		</ul>
+	</div>
+</div>
+<!-- end header -->
+<!-- start page -->
+<div id="wrapper">
+<div id="wrapper-btm">
+<div id="page">
+	<!-- start content -->
+	<div id="content">
+		<div class="post">
+			<h1 class="title">About </h1>
+			<div class="entry">
+				<p><img src="images/logo.png" alt="" width="95" height="100" class="left" />
+					This is the about page...
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- end content -->
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<?php $dir='./'; include("common/login_sidebar.php"); ?>
+		</ul>
+	</div>
+	<!-- end sidebar -->
+	<div style="clear: both;">&nbsp;</div>
+</div>
+<!-- end page -->
+</div>
+</div>
+<!-- start footer -->
+<div id="footer">
+	<div id="footer-wrap">
+	<p id="legal">(c) 2014 <a href="http://www.mit.edu/~amini/">Alexander Amini</a><br>
+	<img src="images/mit-icon.gif" height="15"/>
+	Massachusetts Institute of Technology
+	</p>
+	</div>
+</div>
+<!-- end footer -->
+</body>
+</html>

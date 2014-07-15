@@ -1,0 +1,108 @@
+<?php 
+session_start(); 
+?>
+
+
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="../images/logo_pi.png">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>myDoor</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="../css/default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div id="logo-wrap">
+<div id="logo">
+	<img src="../images/logo_pi.png" alt="" width="70" height="80" class="left" />
+	<h1><a href="../index.html">myDoor</a></h1>
+	<h2> full control of your door</h2>
+</div>
+</div>
+
+<!-- start header -->
+<div id="header">
+	<div id="menu">
+		<ul>
+			<li><a href="../index.html">Homepage</a></li>
+			<li class="current_page_item"><a href="index.html">Control</a></li>
+			<li><a href="../about.html">About</a></li>
+			<li><a href="../contact.html">Want One?</a></li>
+		</ul>
+	</div>
+</div>
+<!-- end header -->
+<!-- start page -->
+<div id="wrapper">
+<div id="wrapper-btm">
+<div id="page">
+	<!-- start sidebar -->
+	<div id="sidebar">
+		<ul>
+			<?php $dir='../'; include("../common/login_sidebar.php"); ?>
+		</ul>
+	</div>
+	<!-- end sidebar -->
+	<!-- start content -->
+	<div id="content">
+		<div class="post">
+			<h1>Control! </h1>
+			&nbsp;
+			<div class="entry">
+				<?php if( is_session_timeout() ) {
+					reset_login();
+				}?> 
+				<?php if( is_user_logged_out() ) : ?>
+					<h2>Please login to have control of this door!</h2>
+				<?php else: ?>
+
+				<div id="menu">
+					<ul>
+						<li><a href="index.html">Main</a></li>
+						<li><a href="enroll.html">Enroll</a></li>
+						<li class="current_page_item"><a href="manage.html">Manage</a></li>
+						<li><a href="log.html">Log</a></li>
+						<li><a href="open.html">Open</a></li>
+					</ul>
+				</div>
+
+				<p>This is the management page....</p>
+
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<!-- end content -->
+	<div style="clear: both;">&nbsp;</div>
+</div>
+<!-- end page -->
+</div>
+</div>
+<!-- start footer -->
+<div id="footer">
+	<div id="footer-wrap">
+	<p id="legal">(c) 2014 <a href="http://www.mit.edu/~amini/">Alexander Amini</a><br>
+	<img src="../images/mit-icon.gif" height="15"/>
+	Massachusetts Institute of Technology
+	</p>
+	</div>
+</div>
+<!-- end footer -->
+</body>
+</html>
+
+
+<!--
+<?php if( is_session_timeout() ) {
+	reset_login();
+}?> 
+<?php if( is_user_logged_out() ) : ?>
+	<h2>Please login to have control of this door!</h2>
+<?php else: ?>
+<?php endif; ?>
+-->
+
+
