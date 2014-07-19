@@ -10,6 +10,105 @@ session_start();
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <link href="../css/default.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery.Validate/1.6/jQuery.Validate.js"></script>
+
+<style type="text/css">
+	.err{ color: #FB3A3A; }
+</style>
+
+<script type="text/javascript">
+	$(document).ready(function() {  
+	
+	$.validator.addMethod("nameOnly", function(value, element, param) {
+		var reg = /^[a-zA-Z]+$/;
+		if(reg.test(value)){
+			return true;
+		} else {
+			return false;
+		}
+	}, "Number is not permitted");
+
+
+
+	$("#enroll_user").validate({
+		onfocusout: function(element) { $(element).valid(); },
+		onkeyup: function(element) { $(element).valid(); },
+		errorClass: "err",
+
+
+		// Specify the validation rules
+		rules: {
+			first: {required:true, nameOnly:true, minlength:2},
+			last: {required:true, nameOnly:true, minlength:2},
+			day: {required:true}
+		},
+
+		// Specify the validation error messages
+		messages: {
+			first: {
+				required: "Please enter your first name",
+				name: "Please enter a valid name",
+				minlength: "Name too short!"},
+			last: {
+				required: "Please enter your last name",
+				name: "Please enter a valid name",
+				minlength: "Name too short!"},
+			day: {
+				required: "Select at least one day!"}
+		},
+
+		submitHandler: function(form) {
+			$('#fp_image').each(function () {
+				if (this.src.length > 0) {
+					form.submit();
+				} else {
+					$('div.form_error').text("Please capture a fingerprint before enrolling!");
+				}
+			});
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+<script type="text/javascript">
+
+	function capture() {
+
+		$.ajax({
+	        url: "./capture.php",
+	        type: "post",
+			dataType: "json",
+	        data: {},
+	        beforeSend : function (){
+				$('div.form_error').text("");
+	        	$('#capture_log').css('display', 'inline-block');
+	        	$("#capture_log").val("Scan your finger!");
+            },
+	        success: function(data){
+	        	$('#capture_log').val("OUTPUT: \n"+data["output"]);
+
+				$('#reload_pic').css('display', 'inline');
+				$("#fp_image").css('display', 'inline-block');
+				$("#fp_image").attr("src","../.tmp/enrolled.jpg"+"?"+Math.random());
+	        },
+	        error:function(data){
+	        	$('#capture_log').val("OUTPUT: \n"+data["output"]);
+	            alert("Fingerprint Capture Failed...\nTry reviewing log.");
+	        }
+	    });
+	}
+
+	function reloadImage() {
+		$("#fp_image").attr("src","../.tmp/enrolled.jpg"+"?"+Math.random());
+	}
+
+</script> 
+
+
+
 </head>
 <body>
 
@@ -59,15 +158,98 @@ session_start();
 
 				<div id="menu">
 					<ul>
-						<li class="current_page_item"><a href="index.html">Main</a></li>
-						<li><a href="enroll.html">Enroll</a></li>
+						<li><a href="index.html">Main</a></li>
+						<li class="current_page_item"><a href="enroll.html">Enroll</a></li>
 						<li><a href="manage.html">Manage</a></li>
 						<li><a href="log.html">Log</a></li>
 						<li><a href="open.html">Open</a></li>
 					</ul>
 				</div>
+				<br>
 
-				<p>This is the main page of controlling myDoor! <br>Use the navigation bar above to enroll a new fingerprint, open the door remotely, or view the entry log.</p>
+				<table border="0">
+					<tr>
+					  <td width="380px" valign="top">
+					  	<h3>Form Questions</h3><br>
+
+					  	<form id="enroll_user" method="post" action="enroll.php" >
+							<table border="0" style="border-spacing:0px 20px;">
+								<tr>
+									<td width="90px">First Name*</td>
+									<td width="280px"><input type="text" id="first" name="first" style="width:95%"/></td>
+								</tr>
+								<tr>
+									<td width="90px">Last Name*</td>
+									<td width="280px"><input type="text" name="last" id="last" style="width:95%"/></td>
+								</tr>
+								<tr>
+									<td width="90px">Days*</td>
+									<td width="280px" align="center">
+										<input type="checkbox" name="day[]" value="0" checked/>M
+										<input type="checkbox" name="day[]" value="1" checked/>T
+										<input type="checkbox" name="day[]" value="2" checked/>W
+										<input type="checkbox" name="day[]" value="3" checked/>R
+										<input type="checkbox" name="day[]" value="4" checked/>F
+										<input type="checkbox" name="day[]" value="5" checked/>S
+										<input type="checkbox" name="day[]" value="6" checked/>U
+									</td>
+								</tr>
+								<tr>
+									<td width="90px">Times*</td>
+									<td width="280px" align="center">
+										<select name="start_hour" >
+											<?php for ($i=0; $i<=23; $i++) { ?>
+												<option value="<?php printf("%02d", $i);?>"><?php printf("%02d", $i);?></option>
+											<?php } ?>
+										</select>
+										<b>:</b>
+										<select name="start_min" >
+											<?php for ($i=0; $i<=59; $i++) { ?>
+												<option value="<?php printf("%02d", $i);?>"><?php printf("%02d", $i);?></option>
+											<?php } ?>
+										</select>
+										&nbsp <b>to</b> &nbsp
+										<select name="end_hour">
+											<?php for ($i=0; $i<=23; $i++) { 
+												if ($i!=23) { ?>
+													<option value="<?php printf("%02d", $i);?>"><?php printf("%02d", $i);?></option>
+												<?php }
+												else { ?>
+													<option selected value="<?php printf("%02d", $i);?>"><?php printf("%02d", $i);?></option>
+												<?php }
+											} ?>
+										</select>
+										<b>:</b>
+										<select name="end_min" >
+											<?php for ($i=0; $i<=59; $i++) { 
+												if ($i!=59) { ?>
+													<option value="<?php printf("%02d", $i);?>"><?php printf("%02d", $i);?></option>
+												<?php }
+												else { ?>
+													<option selected value="<?php printf("%02d", $i);?>"><?php printf("%02d", $i);?></option>
+												<?php }
+											} ?>
+										</select>
+									</td>
+								</tr>
+							</table>
+							<input type="submit" id="" value="Enroll!" style="width:100px"/>
+						</form>
+					  </td>
+
+
+					  <td width="150px" valign="top" align="center" >
+					  	<h3>Record Fingerprint</h3><br>
+					  	<img id="fp_image" width="120px" height="170px" style="display:none"/>
+
+					  	<input type="button" id="capture_button" style="width:75px" value="Capture" onclick="capture();"/>
+					  	<input type="button" id="reload_pic" style="width:75px; display:none" value="Reload" onclick="reloadImage();"/>
+					  	<br><br>
+						<div class="form_error" style="color:red"></div>
+					  	<textarea id="capture_log" style="display:none; font-size: 11px; width: 100%; height: 170px;" readonly></textarea>
+					  </td>
+					</tr>
+				</table>
 
 				<?php endif; ?>
 			</div>
